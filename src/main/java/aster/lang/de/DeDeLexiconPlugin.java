@@ -1,21 +1,35 @@
 package aster.lang.de;
 
-import aster.core.lexicon.DeDeLexicon;
+import aster.core.lexicon.DynamicLexicon;
 import aster.core.lexicon.Lexicon;
 import aster.core.lexicon.LexiconPlugin;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+
 /**
- * Deutsches Sprachpaket-Plugin (de-DE).
+ * 德语语言包插件 (de-DE)。
  * <p>
- * Registriert das deutsche Lexikon ueber den SPI-Mechanismus
- * im {@link aster.core.lexicon.LexiconRegistry}.
- * Deutsch verwendet benutzerdefinierte Regeln (customRules) fuer die Umlaut-Normalisierung
- * und benoetigt keine spezialisierten Transformatoren.
+ * 从 JSON 配置加载德语词法表，通过 SPI 机制注册到 {@link aster.core.lexicon.LexiconRegistry}。
+ * 德语使用自定义规则（customRules）进行 Umlaut 规范化，不需要专用变换器。
  */
 public final class DeDeLexiconPlugin implements LexiconPlugin {
 
     @Override
     public Lexicon createLexicon() {
-        return DeDeLexicon.INSTANCE;
+        String json = loadResource("lexicons/de-DE.json");
+        return DynamicLexicon.fromJsonString(json);
+    }
+
+    private String loadResource(String path) {
+        try (var is = getClass().getClassLoader().getResourceAsStream(path)) {
+            if (is == null) {
+                throw new IllegalStateException("Resource not found: " + path);
+            }
+            return new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to load resource: " + path, e);
+        }
     }
 }
