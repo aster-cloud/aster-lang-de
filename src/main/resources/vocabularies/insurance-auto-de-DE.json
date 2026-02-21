@@ -41,20 +41,20 @@
     { "canonical": "status", "localized": "Status", "parent": "Policy", "aliases": ["Vertragsstatus"] }
   ],
   "functions": [
-    { "canonical": "generateQuote", "localized": "Angebot erstellen", "aliases": ["Angebot berechnen"] },
-    { "canonical": "calculatePremium", "localized": "Praemie berechnen" },
-    { "canonical": "calculateAgeFactor", "localized": "Altersfaktor berechnen" },
-    { "canonical": "calculateDrivingYearsFactor", "localized": "Erfahrungsfaktor berechnen" },
-    { "canonical": "assessRisk", "localized": "Risiko bewerten", "aliases": ["Risikobewertung"] },
-    { "canonical": "validateDriver", "localized": "Fahrer pruefen", "aliases": ["Fahrerpruefung"] },
-    { "canonical": "validateVehicle", "localized": "Fahrzeug pruefen", "aliases": ["Fahrzeugpruefung"] }
+    { "canonical": "generateQuote", "localized": "AngebotErstellen", "aliases": ["Angebot erstellen", "Angebot berechnen"] },
+    { "canonical": "calculatePremium", "localized": "PraemieBerechnen", "aliases": ["Praemie berechnen"] },
+    { "canonical": "calculateAgeFactor", "localized": "AltersfaktorBerechnen", "aliases": ["Altersfaktor berechnen"] },
+    { "canonical": "calculateDrivingYearsFactor", "localized": "ErfahrungsfaktorBerechnen", "aliases": ["Erfahrungsfaktor berechnen"] },
+    { "canonical": "assessRisk", "localized": "RisikoBewerten", "aliases": ["Risiko bewerten", "Risikobewertung"] },
+    { "canonical": "validateDriver", "localized": "FahrerPruefen", "aliases": ["Fahrer pruefen", "Fahrerpruefung"] },
+    { "canonical": "validateVehicle", "localized": "FahrzeugPruefen", "aliases": ["Fahrzeug pruefen", "Fahrzeugpruefung"] }
   ],
   "enumValues": [
     { "canonical": "Approved", "localized": "Genehmigt", "aliases": ["Bewilligt"] },
     { "canonical": "Rejected", "localized": "Abgelehnt" },
     { "canonical": "Pending", "localized": "Ausstehend", "aliases": ["In Bearbeitung"] },
-    { "canonical": "HighRisk", "localized": "Hohes Risiko" },
-    { "canonical": "MediumRisk", "localized": "Mittleres Risiko" },
-    { "canonical": "LowRisk", "localized": "Niedriges Risiko" }
+    { "canonical": "HighRisk", "localized": "HohesRisiko", "aliases": ["Hohes Risiko"] },
+    { "canonical": "MediumRisk", "localized": "MittleresRisiko", "aliases": ["Mittleres Risiko"] },
+    { "canonical": "LowRisk", "localized": "NiedrigesRisiko", "aliases": ["Niedriges Risiko"] }
   ]
 }

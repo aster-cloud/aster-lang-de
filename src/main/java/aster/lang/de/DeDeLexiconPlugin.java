@@ -1,8 +1,8 @@
 package aster.lang.de;
 
 import aster.core.identifier.DomainVocabulary;
-import aster.core.identifier.VocabularyLoader;
 import aster.core.identifier.VocabularyPlugin;
+import aster.core.identifier.VocabularyPluginSupport;
 import aster.core.lexicon.DynamicLexicon;
 import aster.core.lexicon.Lexicon;
 import aster.core.lexicon.LexiconPlugin;
@@ -30,25 +30,14 @@ public final class DeDeLexiconPlugin implements LexiconPlugin, VocabularyPlugin 
 
     @Override
     public DomainVocabulary createVocabulary() {
-        return loadVocabulary("vocabularies/insurance-auto-de-DE.json");
+        return VocabularyPluginSupport.loadVocabulary(getClass(), "vocabularies/insurance-auto-de-DE.json");
     }
 
     @Override
     public List<DomainVocabulary> getVocabularies() {
         return List.of(
-            loadVocabulary("vocabularies/finance-loan-de-DE.json")
+            VocabularyPluginSupport.loadVocabulary(getClass(), "vocabularies/finance-loan-de-DE.json")
         );
-    }
-
-    private DomainVocabulary loadVocabulary(String path) {
-        try (var is = getClass().getClassLoader().getResourceAsStream(path)) {
-            if (is == null) {
-                throw new IllegalStateException("Resource not found: " + path);
-            }
-            return VocabularyLoader.loadFromStream(is);
-        } catch (IOException e) {
-            throw new UncheckedIOException("Failed to load vocabulary: " + path, e);
-        }
     }
 
     private String loadResource(String path) {
