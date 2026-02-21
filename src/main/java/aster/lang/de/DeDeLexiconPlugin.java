@@ -1,5 +1,8 @@
 package aster.lang.de;
 
+import aster.core.identifier.DomainVocabulary;
+import aster.core.identifier.VocabularyLoader;
+import aster.core.identifier.VocabularyPlugin;
 import aster.core.lexicon.DynamicLexicon;
 import aster.core.lexicon.Lexicon;
 import aster.core.lexicon.LexiconPlugin;
@@ -7,19 +10,45 @@ import aster.core.lexicon.LexiconPlugin;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * 德语语言包插件 (de-DE)。
  * <p>
  * 从 JSON 配置加载德语词法表，通过 SPI 机制注册到 {@link aster.core.lexicon.LexiconRegistry}。
  * 德语使用自定义规则（customRules）进行 Umlaut 规范化，不需要专用变换器。
+ * <p>
+ * 同时实现 {@link VocabularyPlugin}，提供德语领域词汇表（汽车保险、贷款金融）。
  */
-public final class DeDeLexiconPlugin implements LexiconPlugin {
+public final class DeDeLexiconPlugin implements LexiconPlugin, VocabularyPlugin {
 
     @Override
     public Lexicon createLexicon() {
         String json = loadResource("lexicons/de-DE.json");
         return DynamicLexicon.fromJsonString(json);
+    }
+
+    @Override
+    public DomainVocabulary createVocabulary() {
+        return loadVocabulary("vocabularies/insurance-auto-de-DE.json");
+    }
+
+    @Override
+    public List<DomainVocabulary> getVocabularies() {
+        return List.of(
+            loadVocabulary("vocabularies/finance-loan-de-DE.json")
+        );
+    }
+
+    private DomainVocabulary loadVocabulary(String path) {
+        try (var is = getClass().getClassLoader().getResourceAsStream(path)) {
+            if (is == null) {
+                throw new IllegalStateException("Resource not found: " + path);
+            }
+            return VocabularyLoader.loadFromStream(is);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to load vocabulary: " + path, e);
+        }
     }
 
     private String loadResource(String path) {
