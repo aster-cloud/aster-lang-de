@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 德语语言包插件 (de-DE)。
@@ -37,6 +38,14 @@ public final class DeDeLexiconPlugin implements LexiconPlugin, VocabularyPlugin 
     public List<DomainVocabulary> getVocabularies() {
         return List.of(
             VocabularyPluginSupport.loadVocabulary(getClass(), "vocabularies/finance-loan-de-DE.json")
+        );
+    }
+
+    @Override
+    public Map<String, String> getOverlayResources() {
+        return Map.of(
+                "typeInferenceRules", "overlays/type-inference-rules.json",
+                "inputGenerationRules", "overlays/input-generation-rules.json"
         );
     }
 
