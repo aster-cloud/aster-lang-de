@@ -1,5 +1,7 @@
 # aster-lang-de -- Aster CNL 德语语言包
 
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+
 ## 概述
 
 提供德语（de-DE）词法表、领域词汇和规范化规则。
