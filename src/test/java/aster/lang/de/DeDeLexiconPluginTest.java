@@ -86,4 +86,13 @@ class DeDeLexiconPluginTest {
         DeDeLexiconPlugin plugin = new DeDeLexiconPlugin();
         assertThat(plugin.getTransformers()).isEmpty();
     }
+
+    @Test
+    @DisplayName("R7-Backend-4: providedLexiconIds 与 createLexicon().getId() 一致")
+    void testProvidedIdsMatchActualLexicon() {
+        DeDeLexiconPlugin plugin = new DeDeLexiconPlugin();
+        assertThat(plugin.providedLexiconIds())
+            .as("plugin metadata 必须与 createLexicon() 一致")
+            .containsExactly(plugin.createLexicon().getId());
+    }
 }

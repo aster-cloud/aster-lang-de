@@ -24,6 +24,11 @@ import java.util.Map;
 public final class DeDeLexiconPlugin implements LexiconPlugin, VocabularyPlugin {
 
     @Override
+    public java.util.Set<String> providedLexiconIds() {
+        return java.util.Set.of("de-DE");
+    }
+
+    @Override
     public Lexicon createLexicon() {
         String json = loadResource("lexicons/de-DE.json");
         return DynamicLexicon.fromJsonString(json);
