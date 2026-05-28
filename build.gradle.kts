@@ -43,3 +43,58 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
+/**
+ * verifyLexiconKeywordParity (P2-R21 audit):
+ *   Check that de-DE.json's `keywords` map contains the same key set as
+ *   the canonical en-US.json keys. Per-language values differ (translations);
+ *   what must match is the set of SemanticTokenKind names.
+ *
+ * Why: aster-lang-core's FallbackLexicon assumes en-US is the keyword backbone.
+ * If de-DE adds or drops a key while en-US doesn't, runtime translation drifts
+ * silently. CI catches the drift at build time.
+ */
+tasks.register("verifyLexiconKeywordParity") {
+    group = "verification"
+    description = "Ensure de-DE.json keyword set matches en-US backbone"
+
+    val ours = file("src/main/resources/lexicons/de-DE.json")
+    val backbone = file("../aster-lang-core/src/main/resources/builtin/en-US.json")
+
+    inputs.file(ours)
+    inputs.file(backbone)
+
+    doLast {
+        if (!backbone.exists()) {
+            logger.warn(
+                "verifyLexiconKeywordParity: en-US backbone not found at ${backbone.absolutePath}. " +
+                    "Sibling aster-lang-core absent — likely non-monorepo CI. Skipping."
+            )
+            return@doLast
+        }
+        // groovy.json is on the gradle classpath; pull keyword keys from both.
+        val parser = groovy.json.JsonSlurper()
+        @Suppress("UNCHECKED_CAST")
+        val oursKeywords = ((parser.parse(ours) as Map<String, Any>)["keywords"] as Map<String, Any>).keys
+        @Suppress("UNCHECKED_CAST")
+        val backboneKeywords = ((parser.parse(backbone) as Map<String, Any>)["keywords"] as Map<String, Any>).keys
+
+        val onlyInOurs = oursKeywords - backboneKeywords
+        val onlyInBackbone = backboneKeywords - oursKeywords
+        if (onlyInOurs.isNotEmpty() || onlyInBackbone.isNotEmpty()) {
+            throw GradleException(
+                "de-DE.json keyword drift:\n" +
+                    "  only in de-DE: $onlyInOurs\n" +
+                    "  only in en-US: $onlyInBackbone\n" +
+                    "Sync the keyword set across all lexicon repos before merging."
+            )
+        }
+        logger.lifecycle(
+            "verifyLexiconKeywordParity: de-DE.json keyword set matches en-US backbone (${oursKeywords.size} keys) ✓"
+        )
+    }
+}
+
+tasks.named("check") {
+    dependsOn("verifyLexiconKeywordParity")
+}
