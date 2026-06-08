@@ -59,10 +59,12 @@ tasks.register("verifyLexiconKeywordParity") {
     description = "Ensure de-DE.json keyword set matches en-US backbone"
 
     val ours = file("src/main/resources/lexicons/de-DE.json")
+    // backbone 可选（非 monorepo CI 下 ../aster-lang-core 不存在）。用 inputs.files(...).optional()
+    // 而非 inputs.file()——后者会在 task 执行前强制校验存在，使下方 exists() skip 逻辑失效。
     val backbone = file("../aster-lang-core/src/main/resources/builtin/en-US.json")
 
     inputs.file(ours)
-    inputs.file(backbone)
+    inputs.files(backbone).optional()
 
     doLast {
         if (!backbone.exists()) {
